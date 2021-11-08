@@ -1,4 +1,7 @@
 read_file/data*
+read_file/out
+
+*/**/out
 */**/.DS_Store
 .DS_Store
 .vscode/
