@@ -1,0 +1,8 @@
+code 0 2
+sscode 2 3
+banque 5 5
+montant 10 12
+token 22 19
+numcom 41 6
+nomcom 47 10
+LGRECORD 57
