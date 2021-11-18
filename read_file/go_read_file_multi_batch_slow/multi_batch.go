@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"regexp"
 	"sort"
@@ -54,6 +56,11 @@ func main() {
 
 	// nombre de workers
 	nb_workers := 10
+
+	// we need a webserver to get the pprof webserver
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	// init printer
 	go run_printer(result_channel, nb_workers, end_printer_channel)
