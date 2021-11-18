@@ -25,16 +25,8 @@ func main() {
 	read_file(format)
 }
 
-func print_result(data map[string]string) string {
-	res, err := json.Marshal(&data)
-	if err != nil {
-		panic("Cannot marshal format !")
-	}
-	return string(res)
-}
-
 func read_file(format Format) {
-	f, err := os.Open("../data.txt")
+	f, err := os.Open("../data2.txt")
 
 	if err != nil {
 		log.Fatal(err)
@@ -62,6 +54,14 @@ func parse_line(format Format, line string) map[string]string {
 		result[k] = line[v.Offset : v.Offset+v.Length]
 	}
 	return result
+}
+
+func print_result(data map[string]string) string {
+	res, err := json.Marshal(&data)
+	if err != nil {
+		panic("Cannot marshal format !")
+	}
+	return string(res)
 }
 
 func read_format() Format {

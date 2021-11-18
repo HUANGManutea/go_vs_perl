@@ -33,28 +33,11 @@ type Result struct {
 }
 
 func main() {
-	// ouverture de fichier format
-	formatFile, err := os.Open("../format.txt")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// fermeture du fichier format à la fin
-	defer formatFile.Close()
-
-	// ouverture du fichier data
-	data, err := os.Open("../data2.txt")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// fermeture du fichier data à la fin
-	defer data.Close()
+	formatFilePath := "../format.txt"
+	dataFilePath := "../data2.txt"
 
 	// init format
-	format := read_format(formatFile)
+	format := read_format(formatFilePath)
 
 	// read data -> line_channel -> workers
 	line_channel := make(chan *LineBatch)
@@ -80,7 +63,7 @@ func main() {
 	}
 
 	// lecture du fichier data
-	read_file(data, format, line_channel, bufferSize, nb_workers)
+	go read_file(dataFilePath, format, line_channel, bufferSize, nb_workers)
 
 	// attente fin du printer
 	_ = <-end_printer_channel
@@ -156,7 +139,17 @@ func run_parser(format Format, line_channel chan *LineBatch, result_channel chan
 	}
 }
 
-func read_file(dataFile *os.File, format Format, line_channel chan *LineBatch, bufferSize int, nb_workers int) {
+func read_file(dataFilePath string, format Format, line_channel chan *LineBatch, bufferSize int, nb_workers int) {
+	// ouverture du fichier data
+	dataFile, err := os.Open(dataFilePath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// fermeture du fichier data à la fin
+	defer dataFile.Close()
+
 	// ouverture de fichier data
 	scanner := bufio.NewScanner(dataFile)
 
@@ -218,7 +211,16 @@ func parse_line(format Format, line *string) map[string]string {
 	return result
 }
 
-func read_format(formatFile *os.File) Format {
+func read_format(formatFilePath string) Format {
+	// ouverture de fichier format
+	formatFile, err := os.Open("../format.txt")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// fermeture du fichier format à la fin
+	defer formatFile.Close()
 
 	scanner := bufio.NewScanner(formatFile)
 	// {
